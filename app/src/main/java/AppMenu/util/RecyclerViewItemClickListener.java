@@ -1,4 +1,4 @@
-package ch.hevs.aislab.intro.util;
+package AppMenu.util;
 
 import android.view.View;
 

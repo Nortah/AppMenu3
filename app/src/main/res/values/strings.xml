@@ -15,8 +15,9 @@
     <string name="action_accept">Execute</string>
     <string name="title_activity_delete_account">Delete Client</string>
     <string name="account_deleted">Client deleted</string>
-    <string name="title_activity_main">Clients</string>
+    <string name="title_activity_main">Types</string>
     <string name="title_activity_details">Client Details</string>
     <string name="title_activity_create">Create Client</string>
     <string name="action_create">Create Client</string>
+    <string name="type_edited">Type edited</string>
 </resources>

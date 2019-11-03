@@ -1,4 +1,4 @@
-package ch.hevs.aislab.intro.ui;
+package AppMenu.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +11,12 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import ch.hevs.aislab.intro.R;
-import ch.hevs.aislab.intro.adapter.RecyclerAdapter;
-import ch.hevs.aislab.intro.database.entity.ClientEntity;
-import ch.hevs.aislab.intro.util.RecyclerViewItemClickListener;
-import ch.hevs.aislab.intro.viewmodel.ClientListViewModel;
+
+import AppMenu.database.entity.TypeEntity;
+import AppMenu.viewmodel.TypeListViewModel;
+import ch.hevs.AppMenu.intro.R;
+import AppMenu.adapter.RecyclerAdapter;
+import AppMenu.util.RecyclerViewItemClickListener;
 
 import android.util.Log;
 import android.view.View;
@@ -29,9 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private List<ClientEntity> clients;
+    private List<TypeEntity> types;
     private RecyclerAdapter recyclerAdapter;
-    private ClientListViewModel viewModel;
+    private TypeListViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         setTitle(R.string.title_activity_main);
 
-        RecyclerView recyclerView = findViewById(R.id.clientsRecyclerView);
+        RecyclerView recyclerView = findViewById(R.id.typesRecyclerView);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -52,32 +53,30 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
 
-        clients = new ArrayList<>();
+        types = new ArrayList<>();
         recyclerAdapter = new RecyclerAdapter(new RecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 Log.d(TAG, "clicked position:" + position);
-                Log.d(TAG, "clicked on: " + clients.get(position).toString());
+                Log.d(TAG, "clicked on: " + types.get(position).toString());
 
-                Intent intent = new Intent(MainActivity.this, ClientDetails.class);
+                Intent intent = new Intent(MainActivity.this, TypeDetails.class);
                 intent.setFlags(
                         Intent.FLAG_ACTIVITY_NO_ANIMATION |
                                 Intent.FLAG_ACTIVITY_NO_HISTORY
                 );
-                intent.putExtra("clientEmail", clients.get(position).getEmail());
+                intent.putExtra("typeId", types.get(position).getId());
                 startActivity(intent);
             }
 
             @Override
             public void onItemLongClick(View v, int position) {
-                Log.d(TAG, "longClicked position:" + position);
-                Log.d(TAG, "longClicked on: " + clients.get(position).toString());
             }
         });
 
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(view -> {
-                    Intent intent = new Intent(MainActivity.this, ClientDetails.class);
+                    Intent intent = new Intent(MainActivity.this, TypeDetails.class);
                     intent.setFlags(
                             Intent.FLAG_ACTIVITY_NO_ANIMATION |
                                     Intent.FLAG_ACTIVITY_NO_HISTORY
@@ -86,12 +85,18 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        ClientListViewModel.Factory factory = new ClientListViewModel.Factory(getApplication());
-        viewModel = ViewModelProviders.of(this, factory).get(ClientListViewModel.class);
-        viewModel.getClients().observe(this, clientEntities -> {
-            if (clientEntities != null) {
-                clients = clientEntities;
-                recyclerAdapter.setData(clients);
+        TypeListViewModel.Factory factory = new TypeListViewModel.Factory(getApplication());
+        viewModel = ViewModelProviders.of(this, factory).get(TypeListViewModel.class);
+        viewModel.getTypes().observe(this, typeEntities -> {
+            if (typeEntities != null) {
+                types = typeEntities;
+                typeEntities.forEach( typeEntity -> {
+                    Log.d(TAG, "type Entity: " + typeEntity);
+                } );
+                /*for(int i = 0; i< types.size(); i++) {
+                    System.out.println( types.get(i).getName());
+                }*/
+                recyclerAdapter.setData(types);
             }
         });
 
